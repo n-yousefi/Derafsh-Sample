@@ -1,9 +1,0 @@
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\bin\Debug\netcoreapp2.0\DerafshSample.Services.deps.json
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\bin\Debug\netcoreapp2.0\DerafshSample.Services.dll
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.csproj.CoreCompileInputs.cache
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.AssemblyInfoInputs.cache
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.AssemblyInfo.cs
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\bin\Debug\netcoreapp2.0\DerafshSample.Services.pdb
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.dll
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.pdb
-E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Services\obj\Debug\netcoreapp2.0\DerafshSample.Services.csprojResolveAssemblyReference.cache
