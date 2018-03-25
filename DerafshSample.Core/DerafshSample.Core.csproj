@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DerafshSample.ModelsLibrary\DerafshSample.ModelsLibrary.csproj" />
+    <ProjectReference Include="..\DerafshSample.Services\DerafshSample.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Derafsh">
+      <HintPath>..\..\..\Tolid\Project\Daarto-master\Rasha\Derafsh\bin\Debug\netcoreapp2.0\Derafsh.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

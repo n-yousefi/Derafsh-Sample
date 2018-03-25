@@ -1,0 +1,56 @@
+﻿@using DerafshSample.ModelsLibrary.Interfaces
+@{
+    var pageInfo = (BaseModel)ViewData["AshaPageInfoModel"];
+    ViewData["AshaPageTitle"] = pageInfo.Name + "Editing";
+}
+<div class="container body-content">
+    <br />
+    <div class="col-sm-12">
+        @if (Model == null)
+        {
+            <div class="panel">
+                <div>
+                    <h2>
+                        <a href="#">@pageInfo.Name not founded.</a>
+                    </h2>
+                    <div>
+                        <p>
+                            @pageInfo.Name not founded. Back to the <a class="text-info" asp-controller="@pageInfo.Name" asp-action="index">@pageInfo.PluralName list</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">@pageInfo.Name edit</div>
+                <div class="panel-body">
+                    <form asp-controller="@pageInfo.Name" asp-action="Edit" method="post" asp-antiforgery="true" name="form" class="form-horizontal">
+                        @if (ViewBag.Response != null)
+                        {
+                            var response = (ActionMethodResponse)ViewBag.Response;
+
+                            <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+                                @response.Description
+                            </div>
+                        }
+                        @Html.EditorForModel(new { hierarchy = pageInfo.HierarchyLoading, action_type = "edit" })
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button type="submit" class="btn btn-sm btn-info">Update</button>
+                                <a asp-controller="@pageInfo.Name" asp-action="Index" class="btn btn-sm btn-default">Back</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @if (ViewData["HasScript"] != null && (bool)ViewData["HasScript"] == true)
+    {
+        <script type="text/javascript" src="~/js/forms/@(pageInfo.Name).js"></script>
+    }
+}

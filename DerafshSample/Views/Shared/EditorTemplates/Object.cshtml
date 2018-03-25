@@ -1,0 +1,101 @@
+﻿@using System.Collections
+@using System.ComponentModel.DataAnnotations.Schema
+@using System.Reflection
+@using Derafsh.ReflectionHelpers;
+
+@{
+    var table = ViewData.ModelMetadata.ModelType.GetCustomAttribute<TableAttribute>();
+    List<string> disables = null;
+    if (ViewData.ContainsKey("DisableProperties"))
+    {
+        disables = ((List<string>)ViewData["DisableProperties"]).Select(q => q.ToUpper()).ToList();
+    }
+}
+@foreach (var property in ViewData.ModelMetadata
+.Properties
+.Where(q => q.ShowForEdit)
+.OrderBy(q => q.Order))
+{
+    if (property.IsComplexType)
+    {
+        if (ViewData.ContainsKey("hierarchy") && (bool)ViewData["hierarchy"])
+        {
+            var isList = typeof(IEnumerable).IsAssignableFrom(property.ModelType);
+            if (isList)
+            {
+                if (ViewData.ContainsKey("action_type"))
+                {
+                    if ((string)ViewData["action_type"] == "create")
+                    {
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">
+                                @Html.Raw(property.GetDisplayName())
+                            </label>
+                            <div class="col-lg-10">
+                                @if (table != null)
+                                {
+                                    var prop = Model.GetType()
+                                        .GetProperty(property.PropertyName);
+                                    object propModel = prop.GetValue(Model, null);
+                                    if (propModel == null)
+                                    {
+                                        // چک میکنیم که آیا یک لیست است
+                                        var isOntoMany = typeof(IEnumerable).IsAssignableFrom(property.ModelType);
+                                        propModel = Activator.CreateInstance(property.ModelType);
+                                        // اگر لیست بود نوع داخل لیست را هم می فرستیم                                         
+                                        if (isOntoMany)
+                                        {
+                                            var propList = (IList)propModel;
+                                            var innerType = prop.PropertyType.GetGenericArguments()[0];
+                                            propList.Add(Activator.CreateInstance(innerType));
+                                            propModel = propList;
+                                        }
+
+                                        prop.SetValue(Model, propModel);
+                                    }
+                                    
+                                    @Html.Editor(property.PropertyName,new{hierarchy = false});
+                                }
+                            </div>
+                        </div>
+                    }
+                    else if ((string)ViewData["action_type"] == "edit")
+                    {
+                        if (table != null)
+                        {
+                            var id = Model.GetType().GetProperty("Id").GetValue(Model, null);
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">
+                                    @Html.Raw(property.GetDisplayName())
+                                </label>
+                                <div class="col-lg-10">
+                                    <a href="@Url.Action("IndexFor", property.PropertyName)/@table.Name/@id"
+                                       class="btn-new">ویرایش</a>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                }
+
+            }
+            else
+            {
+                <div id="@property.PropertyName" class="inner-form">@Html.Editor(property.PropertyName)</div>
+            }
+        }
+    }
+    else
+    {
+        if (disables != null && disables.Contains(property.PropertyName.ToUpper()))
+        {
+            <div class="editor-field">@Html.Hidden(property.PropertyName)</div>
+        }
+        else
+        {
+            <div class="editor-field">@Html.Editor(property.PropertyName)</div>
+        }
+    }
+}

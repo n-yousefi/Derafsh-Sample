@@ -1,0 +1,15 @@
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.csprojResolveAssemblyReference.cache
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.csproj.CoreCompileInputs.cache
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.AssemblyInfoInputs.cache
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.AssemblyInfo.cs
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\Derafsh.dll
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.ModelsLibrary.dll
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\Derafsh.pdb
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.Core.deps.json
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.Core.dll
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.Core.pdb
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.Services.dll
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.ModelsLibrary.pdb
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\bin\Debug\netcoreapp2.0\DerafshSample.Services.pdb
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.dll
+E:\naser\C#\Derafsh Kaviani\DerafshSample\DerafshSample.Core\obj\Debug\netcoreapp2.0\DerafshSample.Core.pdb

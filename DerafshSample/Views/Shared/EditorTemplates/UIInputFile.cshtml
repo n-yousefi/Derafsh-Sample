@@ -1,0 +1,7 @@
+﻿@{ var title = Html.Raw(ViewData.ModelMetadata.GetDisplayName()); }
+<div class="form-group">
+    <label class="col-lg-2 control-label">@title</label>
+    <div class="col-lg-4">
+        <input type="file" asp-for="@Model"/>
+    </div>
+</div>

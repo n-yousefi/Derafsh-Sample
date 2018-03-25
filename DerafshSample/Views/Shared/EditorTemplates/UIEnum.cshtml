@@ -1,0 +1,72 @@
+﻿@using DerafshSample.ModelsLibrary.Attributes
+@using DerafshSample.ModelsLibrary.Enumeration
+
+@{
+    var title = Html.Raw(ViewData.ModelMetadata.GetDisplayName());
+
+    var attr = ViewData.ModelMetadata.ContainerType
+        .GetProperty(ViewData.ModelMetadata.PropertyName)
+        .GetCustomAttributes(typeof(UIEnumAttribute), false)
+        .OfType<UIEnumAttribute>()
+        .FirstOrDefault();
+    var t = attr.Type;
+}
+<div class="form-group">
+    @if (attr.DisplayType == EnumDisplay.Tab)
+    {
+        <ul class="nav nav-tabs">
+            @foreach (int e in Enum.GetValues(t))
+            {
+                var activeStr = (e == Model) ? "class=\"active\"" : "";
+                <li @activeStr>
+                    <a data-toggle="tab" href="#tab_@e">@Enum.GetName(t, e)</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <label class="col-lg-2 control-label">@title</label>
+        <div class="col-lg-10">
+            @if (attr.Disabled)
+            {
+                <select asp-for="@Model" class="selectpicker" disabled="disabled">
+                    <option value="@Model" selected="selected">@Enum.GetName(t, Model)</option>
+                </select>
+            }
+            else
+            {
+                if (attr.DisplayType == EnumDisplay.DropDown)
+                {
+                    var items = from int e in Enum.GetValues(t)
+                                select new SelectListItem()
+                                {
+                                    Value = e.ToString(),
+                                    Text = Enum.GetName(t, e),
+                                    Selected = e == Model
+                                };
+                    <div class="dataTables_length" id="users-table_length">
+                        <select asp-for="@Model" asp-items="@items" class="selectpicker"></select>
+                    </div>
+                }
+                else if (attr.DisplayType == EnumDisplay.Radio)
+                {
+                    <div class="dataTables_length" id="users-table_length">
+                        <div class="checkbox">
+                            @foreach (int e in Enum.GetValues(t))
+                            {
+                                var checkedStr = (e == Model) ? "checked=\"checked\"" : "";
+
+                                <label class="i-checks radio-inline">
+                                    <input asp-for="@Model" value="@e" type="radio" @checkedStr>
+                                    <i></i>
+                                    @Enum.GetName(t, e)
+                                </label>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,46 @@
+﻿@{
+    var title = Html.Raw(ViewData.ModelMetadata.GetDisplayName());
+    bool? value = null;
+    if (ViewData.Model != null)
+    {
+        value = Convert.ToBoolean(ViewData.Model, System.Globalization.CultureInfo.InvariantCulture);
+    }
+}
+
+@if (ViewData.ModelMetadata.IsNullableValueType)
+{
+    var triStateValues = new List<SelectListItem>
+    {
+        new SelectListItem {Text = "نامشخص", Value = String.Empty, Selected = !value.HasValue},
+        new SelectListItem {Text = "بلی", Value = "true", Selected = value.HasValue && value.Value},
+        new SelectListItem {Text = "خیر", Value = "false", Selected = value.HasValue && !value.Value},
+    };
+    <div class="form-group">
+        <label class="col-lg-2 control-label">@title</label>
+        <div class="col-lg-10">
+            <div class="dataTables_length" id="users-table_length">
+                <select asp-for="@Model" asp-items="@triStateValues"></select>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    
+    <div class="form-group">
+        <label class="col-lg-2 control-label">@title</label>
+        <div class="col-lg-10">
+            <div class="checkbox">
+                <label class="i-checks">
+                    @{
+                        var ischecked= value ?? false;
+                        var checkedAttr = "";
+                        if(ischecked)
+                        { checkedAttr= "checked= \"checked\"";}
+                    }
+                    <input asp-for="@Model" @checkedAttr value="@ischecked" data-val="@ischecked" type="checkbox"><i></i>
+                </label>
+            </div>
+        </div>
+    </div>
+}

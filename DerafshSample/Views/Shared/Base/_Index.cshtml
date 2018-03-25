@@ -1,0 +1,18 @@
+﻿@model DerafshSample.ModelsLibrary.ViewModels.General.DataTableComponentModel
+
+<div class="container body-content">
+    <br />
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @Model.Title
+        </div>
+        <br />
+        <div style="margin-right: 20px">
+            <a href="@Model.CreateUrl.Replace("{entityId}", Model.EntityId.ToString()).Replace("{entity}", Model.Entity)">
+                <h5>Create new @Model.Name </h5>
+            </a>
+        </div>
+        <br />
+        @Html.Partial("Base/_DataTable", Model)
+    </div>
+</div>

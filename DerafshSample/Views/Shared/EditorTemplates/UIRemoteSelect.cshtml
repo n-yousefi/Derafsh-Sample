@@ -1,0 +1,20 @@
+﻿@using DerafshSample.ModelsLibrary.Attributes
+@{
+    var title = Html.Raw(ViewData.ModelMetadata.GetDisplayName());
+
+    var attr = ViewData.ModelMetadata.ContainerType
+        .GetProperty(ViewData.ModelMetadata.PropertyName)
+        .GetCustomAttributes(typeof(UIRemoteSelectAttribute), false)
+        .OfType<UIRemoteSelectAttribute>()
+        .FirstOrDefault();
+}
+<div class="form-group">
+    <label class="col-lg-2 control-label">@title</label>
+    <div class="col-lg-10">
+        <div id="users-table_length">
+            <select asp-for="@Model" class="bs-select" title="Choose one" data-val="@Model" data-fetch-url="@Url.Action("GetSelectListItems", attr.Controller)"></select>
+            <a href="@Url.Action("Create", attr.Controller)" class="btn-new">New</a>
+            <a data-href="@Url.Action("Edit", attr.Controller)" data-id="@Html.IdForModel()" class="btn-new edit-entity">Edit</a>
+        </div>
+    </div>
+</div>

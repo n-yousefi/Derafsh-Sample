@@ -1,0 +1,37 @@
+﻿@{
+    var pageInfo = (BaseModel)ViewData["AshaPageInfoModel"];
+    ViewData["AshaPageTitle"] = pageInfo.Name + "Creation";
+}
+<div class="container body-content">
+    <br />
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">@pageInfo.Name insert</div>
+            <div class="panel-body">
+                <form asp-controller="@pageInfo.Name" asp-action="Create" method="post" asp-antiforgery="true" name="form" class="form-horizontal">
+                    @if (ViewBag.Response != null)
+                    {
+                        var response = (ActionMethodResponse)ViewBag.Response;
+
+                        <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+                            @response.Description
+                        </div>
+                    }
+                    @Html.EditorForModel(new { hierarchy = pageInfo.HierarchyLoading, action_type = "create" })
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button type="submit" class="btn btn-sm btn-info">Submit</button>
+                            <a asp-controller="@pageInfo.Name" asp-action="Index" class="btn btn-sm btn-default">Back</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @if (ViewData["HasScript"] != null && (bool)ViewData["HasScript"] == true)
+    {
+        <script type="text/javascript" src="~/js/forms/@(pageInfo.Name).js"></script>
+    }
+}

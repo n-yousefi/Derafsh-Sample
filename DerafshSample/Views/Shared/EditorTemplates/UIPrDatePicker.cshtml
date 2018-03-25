@@ -1,0 +1,23 @@
+﻿@{var title = Html.Raw(ViewData.ModelMetadata.GetDisplayName());}
+<div class="form-group">
+    <label class="col-lg-2 control-label">@title</label>
+    <div class="col-lg-4">
+        <div class="input-group">
+            <div class="input-group-addon"
+                 data-mddatetimepicker="true"
+                 data-trigger="click"
+                 data-targetselector="#@Html.IdForModel()"
+                 data-enabletimepicker="false"
+                 data-placement="bottom"
+                 data-mdpersiandatetimepicker=""
+                 data-mdformat="yyyy/MM/dd"
+                 style="cursor: pointer;"
+                 data-original-title=""
+                 title=""
+                 data-mdpersiandatetimepickershowing="false">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </div>
+            <input type="text" asp-for="@Model" class="form-control" placeholder="@title">
+        </div>
+    </div>
+</div>
