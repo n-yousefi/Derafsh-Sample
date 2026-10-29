@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1220" />
+    <title>@ViewData["Title"] · Derafsh Studio</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" asp-page="/Index" aria-label="Derafsh Studio home">
+                <span class="brand-mark">D</span>
+                <span><strong>derafsh</strong><small>STUDIO · SAMPLE</small></span>
+            </a>
+            <div class="nav-caption">WORKSPACE</div>
+            <a class="nav-item active" asp-page="/Index"><span class="nav-icon">▦</span> Store settings <span class="nav-dot"></span></a>
+            <a class="nav-item" href="#contacts"><span class="nav-icon">⌘</span> Contacts</a>
+            <a class="nav-item" href="#shipping"><span class="nav-icon">↗</span> Shipping zones</a>
+            <a class="nav-item" href="#notifications"><span class="nav-icon">◎</span> Notifications</a>
+            <div class="sidebar-bottom">
+                <div class="status-indicator"></div>
+                <div><strong>Persistence engine</strong><small>Derafsh v2 · SQLite</small></div>
+            </div>
+        </aside>
+        <main class="main-area">
+            <header class="topbar">
+                <div class="breadcrumbs">Workspace <span>/</span> Settings <span>/</span> <strong>Store profile</strong></div>
+                <div class="topbar-right"><span class="live-pill"><i></i> DEMO ENVIRONMENT</span><div class="avatar">DS</div></div>
+            </header>
+            @RenderBody()
+            <footer class="footer"><span>Built with <strong>Derafsh</strong></span><span>Graph persistence · Dynamic metadata-driven UI</span></footer>
+        </main>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

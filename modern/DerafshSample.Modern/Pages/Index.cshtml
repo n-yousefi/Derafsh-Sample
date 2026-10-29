@@ -1,0 +1,155 @@
+@page
+@model IndexModel
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@{
+    ViewData["Title"] = "Store profile";
+    string Label(PropertyInfo p) => p.GetCustomAttribute<DisplayAttribute>()?.GetName() ?? p.Name;
+}
+<section class="page-heading">
+    <div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> CONFIGURATION CENTER</div>
+        <h1>Store profile <span class="heading-spark">✳</span></h1>
+        <p class="page-subtitle">One metadata-driven form. One relational graph. Persisted together with Derafsh.</p>
+    </div>
+    <div class="heading-actions"><span class="saved-badge"><span>✓</span> Graph-aware form</span></div>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="notice @(Model.ModelState.IsValid ? "notice-success" : "notice-warning")" role="status">@Model.StatusMessage</div>
+}
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+<form method="post" id="graph-form">
+    <input asp-for="Input.Id" type="hidden" />
+    <div class="content-grid">
+        <div class="primary-column">
+            <section class="card profile-card">
+                <div class="card-heading">
+                    <div class="section-icon purple">◈</div>
+                    <div><h2>General information</h2><p>Core fields generated from model metadata</p></div>
+                    <span class="step-number">01</span>
+                </div>
+                <div class="form-grid">
+                    @foreach (var property in typeof(StoreSettingsDto).GetProperties().Where(p => p.Name is nameof(StoreSettingsDto.StoreName) or nameof(StoreSettingsDto.Currency) or nameof(StoreSettingsDto.TimeZone)))
+                    {
+                        var value = property.GetValue(Model.Input)?.ToString() ?? "";
+                        var required = property.GetCustomAttribute<RequiredAttribute>() is not null;
+                        var maxLength = property.GetCustomAttribute<StringLengthAttribute>()?.MaximumLength;
+                        <label class="field">
+                            <span class="field-label">@Label(property) @if (required) { <b>*</b> }</span>
+                            <input class="text-input" name="Input.@property.Name" value="@value" maxlength="@(maxLength?.ToString() ?? "200")" required="@required" />
+                            @if (property.Name == nameof(StoreSettingsDto.Currency)) { <span class="field-hint">ISO 4217 · e.g. EUR, USD</span> }
+                        </label>
+                    }
+                </div>
+            </section>
+
+            <section class="card" id="contacts">
+                <div class="card-heading">
+                    <div class="section-icon blue">⌘</div>
+                    <div><h2>Contact points</h2><p>Child collection · add or remove rows dynamically</p></div>
+                    <span class="count-pill" id="contacts-count">@Model.Input.Contacts.Count</span>
+                </div>
+                <div class="collection-head"><span>TYPE</span><span>CONTACT VALUE</span><span></span></div>
+                <div id="contacts-rows" class="collection-rows">
+                @for (var i = 0; i < Model.Input.Contacts.Count; i++)
+                {
+                    <div class="collection-row">
+                        <input type="hidden" name="Input.Contacts[@i].Id" value="@Model.Input.Contacts[i].Id" />
+                        <input type="hidden" name="Input.Contacts[@i].StoreSettingsId" value="@Model.Input.Contacts[i].StoreSettingsId" />
+                        <select class="text-input select-input" name="Input.Contacts[@i].Type">
+                            <option value="Email" selected="@(Model.Input.Contacts[i].Type == "Email")">Email</option>
+                            <option value="Phone" selected="@(Model.Input.Contacts[i].Type == "Phone")">Phone</option>
+                            <option value="Website" selected="@(Model.Input.Contacts[i].Type == "Website")">Website</option>
+                        </select>
+                        <input class="text-input" name="Input.Contacts[@i].Value" value="@Model.Input.Contacts[i].Value" placeholder="hello@example.com" maxlength="160" required />
+                        <button class="icon-button remove-row" type="button" aria-label="Remove contact">×</button>
+                    </div>
+                }
+                </div>
+                <button class="add-row" type="button" data-target="contacts-rows" data-kind="contact"><span>＋</span> Add contact</button>
+            </section>
+
+            <section class="card" id="shipping">
+                <div class="card-heading">
+                    <div class="section-icon orange">↗</div>
+                    <div><h2>Shipping zones</h2><p>Nested rows are synchronized as part of the same graph</p></div>
+                    <span class="count-pill" id="shipping-count">@Model.Input.ShippingZones.Count</span>
+                </div>
+                <div class="collection-head shipping-head"><span>COUNTRY</span><span>DELIVERY FEE</span><span></span></div>
+                <div id="shipping-rows" class="collection-rows">
+                @for (var i = 0; i < Model.Input.ShippingZones.Count; i++)
+                {
+                    <div class="collection-row">
+                        <input type="hidden" name="Input.ShippingZones[@i].Id" value="@Model.Input.ShippingZones[i].Id" />
+                        <input type="hidden" name="Input.ShippingZones[@i].StoreSettingsId" value="@Model.Input.ShippingZones[i].StoreSettingsId" />
+                        <input class="text-input uppercase" name="Input.ShippingZones[@i].CountryCode" value="@Model.Input.ShippingZones[i].CountryCode" placeholder="NL" maxlength="2" required />
+                        <div class="money-input"><span>€</span><input class="text-input" type="number" min="0" max="100000" step="0.01" name="Input.ShippingZones[@i].Fee" value="@Model.Input.ShippingZones[i].Fee" required /></div>
+                        <button class="icon-button remove-row" type="button" aria-label="Remove shipping zone">×</button>
+                    </div>
+                }
+                </div>
+                <button class="add-row" type="button" data-target="shipping-rows" data-kind="shipping"><span>＋</span> Add shipping zone</button>
+            </section>
+
+            <section class="card" id="notifications">
+                <div class="card-heading">
+                    <div class="section-icon green">◎</div>
+                    <div><h2>Notification recipients</h2><p>Another child collection, generated from the same graph metadata</p></div>
+                    <span class="count-pill" id="notifications-count">@Model.Input.NotificationRecipients.Count</span>
+                </div>
+                <div class="collection-head notification-head"><span>EMAIL ADDRESS</span><span></span></div>
+                <div id="notification-rows" class="collection-rows">
+                @for (var i = 0; i < Model.Input.NotificationRecipients.Count; i++)
+                {
+                    <div class="collection-row">
+                        <input type="hidden" name="Input.NotificationRecipients[@i].Id" value="@Model.Input.NotificationRecipients[i].Id" />
+                        <input type="hidden" name="Input.NotificationRecipients[@i].StoreSettingsId" value="@Model.Input.NotificationRecipients[i].StoreSettingsId" />
+                        <input class="text-input" type="email" name="Input.NotificationRecipients[@i].Email" value="@Model.Input.NotificationRecipients[i].Email" placeholder="ops@example.com" maxlength="200" required />
+                        <button class="icon-button remove-row" type="button" aria-label="Remove recipient">×</button>
+                    </div>
+                }
+                </div>
+                <button class="add-row" type="button" data-target="notification-rows" data-kind="notification"><span>＋</span> Add recipient</button>
+            </section>
+            <div class="form-actions">
+                <span class="autosave-note"><span class="tiny-shield">◆</span> Saved atomically through Derafsh graph synchronization</span>
+                <button class="save-button" type="submit"><span>Save changes</span><span class="save-arrow">↗</span></button>
+            </div>
+        </div>
+
+        <aside class="secondary-column">
+            <section class="side-card graph-card">
+                <div class="side-card-title"><span class="pulse"></span> LIVE GRAPH OVERVIEW</div>
+                <div class="graph-root"><span class="graph-symbol">◈</span><div><strong>StoreSettings</strong><small>Root entity · Id @Model.Input.Id</small></div><span class="root-tag">ROOT</span></div>
+                <div class="graph-connector"></div>
+                <div class="graph-child"><span class="mini-node blue"></span><div><strong>StoreContact</strong><small>Contacts collection</small></div><span id="graph-contacts">@Model.Input.Contacts.Count</span></div>
+                <div class="graph-child"><span class="mini-node orange"></span><div><strong>ShippingZone</strong><small>ShippingZones collection</small></div><span id="graph-shipping">@Model.Input.ShippingZones.Count</span></div>
+                <div class="graph-child"><span class="mini-node green"></span><div><strong>NotificationRecipient</strong><small>NotificationRecipients</small></div><span id="graph-notifications">@Model.Input.NotificationRecipients.Count</span></div>
+                <div class="graph-footnote">Parent / child relationships are declared with <code>[ChildCollection]</code>.</div>
+            </section>
+            <section class="side-card">
+                <div class="side-card-title">WHY THIS SAMPLE MATTERS</div>
+                <div class="benefit"><span class="benefit-icon">✳</span><div><strong>Metadata-first UI</strong><p>Labels, required flags and field types come from model annotations.</p></div></div>
+                <div class="benefit"><span class="benefit-icon">⌁</span><div><strong>One graph operation</strong><p>Root and child changes are saved through <code>SynchronizeGraphAsync</code>.</p></div></div>
+                <div class="benefit"><span class="benefit-icon">↻</span><div><strong>No hand-written child CRUD</strong><p>Derafsh coordinates inserts, updates, key propagation and removed children.</p></div></div>
+            </section>
+            <section class="side-card code-card">
+                <div class="code-label">PERSISTENCE PATH</div>
+                <pre><span>var</span> settings = <span>await</span>
+  connection.LoadGraphAsync&lt;
+    StoreSettingsDto&gt;(1);
+
+<span>await</span> connection
+  .SynchronizeGraphAsync(settings);</pre>
+                <div class="code-status"><span></span> SQLite · Foreign keys enabled</div>
+            </section>
+        </aside>
+    </div>
+</form>
+
+@section Scripts {
+<script src="~/js/graph-form.js" asp-append-version="true"></script>
+}

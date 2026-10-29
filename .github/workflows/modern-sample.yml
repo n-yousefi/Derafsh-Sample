@@ -1,0 +1,25 @@
+name: Modern sample
+
+on:
+  push:
+    branches: [master, modern-ui-net10-derafsh-v2]
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-sample.yml"
+  pull_request:
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-sample.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Restore
+        run: dotnet restore modern/DerafshSample.Modern/DerafshSample.Modern.csproj
+      - name: Build
+        run: dotnet build modern/DerafshSample.Modern/DerafshSample.Modern.csproj --no-restore --configuration Release

@@ -1,0 +1,57 @@
+name: Modern Derafsh Sample CI
+
+on:
+  push:
+    branches:
+      - modern-ui-net10-derafsh-v2
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-sample-ci.yml"
+  pull_request:
+    branches:
+      - master
+      - modern-ui-net10-derafsh-v2
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-sample-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: modern-sample-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Restore, build, and publish (.NET 10)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Show SDK version
+        run: dotnet --info
+
+      - name: Restore
+        run: dotnet restore modern/DerafshSample.Modern/DerafshSample.Modern.csproj
+
+      - name: Build Release
+        run: dotnet build modern/DerafshSample.Modern/DerafshSample.Modern.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish modern/DerafshSample.Modern/DerafshSample.Modern.csproj --configuration Release --no-build --output artifacts/DerafshSample.Modern
+
+      - name: Upload published app
+        uses: actions/upload-artifact@v4
+        with:
+          name: derafsh-modern-sample
+          path: artifacts/DerafshSample.Modern/
+          if-no-files-found: error
+          retention-days: 7
