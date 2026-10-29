@@ -2,6 +2,7 @@ using Dapper;
 using Derafsh;
 using DerafshSample.Commerce;
 using Microsoft.Data.Sqlite;
+using Xunit;
 namespace DerafshSample.Commerce.Tests;
 public sealed class CommerceGraphTests {
  private static async Task<SqliteConnection> DbAsync() {
