@@ -1,0 +1,30 @@
+name: Commerce stress sample tests
+
+on:
+  push:
+    branches: [modern-ui-net10-derafsh-v2]
+    paths:
+      - "modern/DerafshSample.Commerce/**"
+      - "modern/DerafshSample.Commerce.Tests/**"
+      - ".github/workflows/commerce-sample-ci.yml"
+  pull_request:
+    branches: [master, modern-ui-net10-derafsh-v2]
+    paths:
+      - "modern/DerafshSample.Commerce/**"
+      - "modern/DerafshSample.Commerce.Tests/**"
+      - ".github/workflows/commerce-sample-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - run: dotnet restore modern/DerafshSample.Commerce.Tests/DerafshSample.Commerce.Tests.csproj
+      - run: dotnet test modern/DerafshSample.Commerce.Tests/DerafshSample.Commerce.Tests.csproj --configuration Release --no-restore
