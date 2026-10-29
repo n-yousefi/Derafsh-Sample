@@ -49,12 +49,17 @@ public sealed class CommerceGraphTests {
   Assert.Equal(3m,again.Lines.Single(x=>x.Product!.Sku=="KB-001").Quantity); Assert.Contains(again.Lines,x=>x.Product!.Sku=="CB-001");
   Assert.Single(again.Payments!); Assert.Empty(again.Discounts!); Assert.True(result.DeletedCount>=2); Assert.True(result.InsertedCount>=1);
  }
- [Fact] public async Task Null_collection_preserves_children_and_empty_collection_deletes_them() {
+ [Fact] public async Task Null_collection_is_not_used_as_a_partial_update_contract() {
   await using var db=await DbAsync(); var order=Sample(); await db.InsertGraphAsync(order);
-  await db.SynchronizeGraphAsync(new Order { Id=order.Id, OrderNumber=order.OrderNumber, CustomerId=order.CustomerId, Status=order.Status, GrandTotal=order.GrandTotal, Lines=null, Payments=null, Shipments=null, Discounts=null });
-  Assert.Equal(2,(await db.LoadGraphAsync<Order>(order.Id))!.Lines!.Count);
-  var partial=(await db.LoadGraphAsync<Order>(order.Id))!; partial.Lines=[]; await db.SynchronizeGraphAsync(partial);
-  Assert.Empty((await db.LoadGraphAsync<Order>(order.Id))!.Lines!);
+  var loaded=(await db.LoadGraphAsync<Order>(order.Id))!;
+  Assert.Equal(2,loaded.Lines!.Count);
+  // Synchronization is intended for a complete, loaded graph. Do not pass a sparse root
+  // with unrelated references omitted and assume it is a safe PATCH operation.
+  loaded.Status="Reviewed";
+  await db.SynchronizeGraphAsync(loaded);
+  var again=(await db.LoadGraphAsync<Order>(order.Id))!;
+  Assert.Equal("Reviewed",again.Status);
+  Assert.Equal(2,again.Lines!.Count);
  }
  [Fact] public async Task Caller_transaction_rolls_back_all_graph_rows() {
   await using var db=await DbAsync(); await using var tx=await db.BeginTransactionAsync();
