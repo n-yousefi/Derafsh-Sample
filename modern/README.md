@@ -45,3 +45,19 @@ Razor Pages form
 ```
 
 The sample references the published `Derafsh` 2.0.0 package so it can be built independently of a local checkout of the library. If that package version is not available in the configured NuGet source, publish/restore it first or temporarily switch the reference to a local project reference during development.
+
+
+## Relationship-heavy commerce sample
+
+The separate commerce project is intended to stress graph persistence beyond the settings form. It models orders, customers, addresses, order lines, products, categories, tags, payments, shipments, shipment items, and discounts.
+
+- [Commerce sample README: trade-offs, graph shape, test coverage, and run commands](DerafshSample.Commerce/README.md)
+- [Commerce integration tests](DerafshSample.Commerce.Tests/)
+
+Run the commerce integration tests from the repository root:
+
+```bash
+dotnet test modern/DerafshSample.Commerce.Tests/DerafshSample.Commerce.Tests.csproj --configuration Release
+```
+
+The README distinguishes Derafsh's graph-persistence role from Dapper's hand-written SQL strengths and explicitly documents that the many-to-many example uses an association entity.
